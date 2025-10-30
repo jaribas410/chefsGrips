@@ -173,10 +173,15 @@ def determine_cook(meat_index:int,temperature_f:float,cook_menu_open:bool)->None
 
 	try:
 		target=selected_targets.get(meat_name)
+		if target is None:
+		    label, cutoff = THRESHOLDS["beef"][1]  # ('rare', 125)
+		    selected_indices["beef"] = 1
+		    selected_targets["beef"] = cutoff
+		    target = cutoff
 		if target is not None:
 			if temperature_f>=target:
 				label=next(l for l,v in THRESHOLDS[meat_name] if v==target)
-				speak(f"{meat_name} reached target:{label}.")
+				speak(f"{meat_name} reached target{label}.")
 				buzzer_on()
 			else:
 				buzzer_off()
@@ -206,7 +211,7 @@ def determine_cook(meat_index:int,temperature_f:float,cook_menu_open:bool)->None
 def switch_meat():
 	global currentMeat
 	currentMeat=(currentMeat+1)%len(meats)
-	msg=f"Switched meat to:{meats[currentMeat]}"
+	msg=f"Switched meat to {meats[currentMeat]}"
 	print(msg)
 	speak(msg)
 
